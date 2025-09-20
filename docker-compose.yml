@@ -5,25 +5,20 @@ services:
   auth:
     build: ./auth
     ports:
-      - "4000:4000"
-    depends_on:
-      - rabbitmq
-      - kafka
+      - "5000:5000"
     environment:
-      - PORT=4000
-      - RABBITMQ_URL=amqp://rabbitmq:5672
-      - KAFKA_BROKER=kafka:9092
+      - PORT=5000
 
   # Order Service
   order:
     build: ./order
     ports:
-      - "4001:4001"
+      - "5001:5001"
     depends_on:
       - rabbitmq
       - kafka
     environment:
-      - PORT=4001
+      - PORT=5001
       - RABBITMQ_URL=amqp://rabbitmq:5672
       - KAFKA_BROKER=kafka:9092
 
@@ -31,12 +26,12 @@ services:
   payment:
     build: ./payment
     ports:
-      - "4002:4002"
+      - "5002:5002"
     depends_on:
       - rabbitmq
       - kafka
     environment:
-      - PORT=4002
+      - PORT=5002
       - RABBITMQ_URL=amqp://rabbitmq:5672
       - KAFKA_BROKER=kafka:9092
 
@@ -44,12 +39,20 @@ services:
   notification:
     build: ./notification
     ports:
-      - "4003:4003"
+      - "5003:5003"
     depends_on:
       - kafka
     environment:
-      - PORT=4003
+      - PORT=5003
       - KAFKA_BROKER=kafka:9092
+
+  # Product Service
+  product:
+    build: ./product
+    ports:
+      - "5004:5004"
+    environment:
+      - PORT=5004
 
   # RabbitMQ
   rabbitmq:
