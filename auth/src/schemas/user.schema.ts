@@ -22,7 +22,7 @@ export const UserSchema = new Schema({
     },
     role: {
         type: String,
-        enum: Object.values(UserRoles),
+        enum: UserRoles,
         default: UserRoles.USER,
     },
 }, {
