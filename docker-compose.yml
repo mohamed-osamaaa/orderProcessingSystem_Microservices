@@ -1,79 +1,72 @@
-version: "1.0"
+version: "${VERSION}"
 
 services:
   # Auth Service
   auth:
     build: ./auth
     ports:
-      - "5000:5000"
-    environment:
-      - PORT=5000
+      - "${AUTH_PORT}:${AUTH_PORT}"   # يقرأ من .env جوة service
 
   # Order Service
   order:
     build: ./order
     ports:
-      - "5001:5001"
+      - "${ORDER_PORT}:${ORDER_PORT}"
     depends_on:
       - rabbitmq
       - kafka
     environment:
-      - PORT=5001
-      - RABBITMQ_URL=amqp://rabbitmq:5672
-      - KAFKA_BROKER=kafka:9092
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - KAFKA_BROKER=${KAFKA_BROKER}
 
   # Payment Service
   payment:
     build: ./payment
     ports:
-      - "5002:5002"
+      - "${PAYMENT_PORT}:${PAYMENT_PORT}"
     depends_on:
       - rabbitmq
       - kafka
     environment:
-      - PORT=5002
-      - RABBITMQ_URL=amqp://rabbitmq:5672
-      - KAFKA_BROKER=kafka:9092
+      - RABBITMQ_URL=${RABBITMQ_URL}
+      - KAFKA_BROKER=${KAFKA_BROKER}
 
   # Notification Service
   notification:
     build: ./notification
     ports:
-      - "5003:5003"
+      - "${NOTIFICATION_PORT}:${NOTIFICATION_PORT}"
     depends_on:
       - kafka
     environment:
-      - PORT=5003
-      - KAFKA_BROKER=kafka:9092
+      - KAFKA_BROKER=${KAFKA_BROKER}
 
   # Product Service
   product:
     build: ./product
     ports:
-      - "5004:5004"
-    environment:
-      - PORT=5004
+      - "${PRODUCT_PORT}:${PRODUCT_PORT}"
 
   # RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
     ports:
-      - "5672:5672"   # Main RabbitMQ port
-      - "15672:15672" # UI Dashboard
+      - "${RABBITMQ_PORT}:${RABBITMQ_PORT}"
+      - "${RABBITMQ_UI_PORT}:${RABBITMQ_UI_PORT}"
 
-  # Zookeeper (Kafka dependency)
+  # Zookeeper
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
-      - "2181:2181"
+      - "${ZOOKEEPER_PORT}:${ZOOKEEPER_PORT}"
 
   # Kafka
   kafka:
     image: wurstmeister/kafka
     ports:
-      - "9092:9092"
+      - "${KAFKA_PORT}:${KAFKA_PORT}"
     environment:
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
+      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
     depends_on:
       - zookeeper
