@@ -37,7 +37,7 @@ export const OrderSchema = new Schema(
         },
         status: {
             type: String,
-            enum: OrderStatus,
+            enum: Object.values(OrderStatus),
             default: OrderStatus.PENDING,
         },
     },

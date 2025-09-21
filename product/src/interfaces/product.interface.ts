@@ -2,7 +2,7 @@ import { Document } from 'mongoose';
 
 import { ProductCategory } from '../enums/productCategory.enum';
 
-export interface Product extends Document {
+export interface IProduct extends Document {
     readonly name: string;
     readonly description?: string;
     readonly price: number;

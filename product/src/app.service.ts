@@ -9,20 +9,20 @@ import {
 } from '@nestjs/common';
 
 import { CreateProductDto } from './dtos/create-product.dto';
-import { Product } from './interfaces/product.interface';
+import { IProduct } from './interfaces/product.interface';
 
 @Injectable()
 export class AppService {
   constructor(
     @Inject('PRODUCT_MODEL')
-    private readonly productModel: Model<Product>,
+    private readonly productModel: Model<IProduct>,
   ) { }
 
   getHello(): string {
     return 'Hello World!';
   }
 
-  async createProduct(createProductDto: CreateProductDto): Promise<Product> {
+  async createProduct(createProductDto: CreateProductDto): Promise<IProduct> {
     try {
       if (!createProductDto.name || !createProductDto.price) {
         throw new BadRequestException('Name and price are required');

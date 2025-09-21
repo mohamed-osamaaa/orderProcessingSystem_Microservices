@@ -25,7 +25,7 @@ export const ProductSchema = new Schema(
         },
         category: {
             type: String,
-            enum: ProductCategory,
+            enum: Object.values(ProductCategory),
             required: true,
         },
         isActive: {
