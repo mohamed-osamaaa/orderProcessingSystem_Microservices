@@ -5,7 +5,7 @@ services:
   auth:
     build: ./auth
     ports:
-      - "${AUTH_PORT}:${AUTH_PORT}"   # يقرأ من .env جوة service
+      - "${AUTH_PORT}:${AUTH_PORT}"
 
   # Order Service
   order:
