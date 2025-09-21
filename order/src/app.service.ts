@@ -38,10 +38,6 @@ export class AppService {
 
 
 
-  getHello(): string {
-    return 'Hello World!';
-  }
-
   async create(createOrderDto: CreateOrderDto): Promise<{ message: string; order: Order }> {
     try {
       const totalAmount = createOrderDto.items.reduce(

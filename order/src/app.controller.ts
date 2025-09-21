@@ -15,12 +15,6 @@ export class AppController {
   constructor(private readonly ordersService: AppService) { }
 
 
-  @Get()
-  getHello(): string {
-    return this.ordersService.getHello();
-  }
-
-
   @Post()
   async create(@Body() createOrderDto: CreateOrderDto): Promise<{ message: string; order: Order }> {
     return this.ordersService.create(createOrderDto);
