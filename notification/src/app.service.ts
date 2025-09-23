@@ -11,7 +11,7 @@ import { INotification } from './interfaces/notification.interface';
 @Injectable()
 export class AppService {
   constructor(
-    @Inject('Notification')
+    @Inject('NOTIFICATION_MODEL')
     private notificationModel: Model<INotification>,
   ) { }
 
