@@ -15,7 +15,7 @@ import { IPayment } from './interfaces/payment.interface';
 export class AppService {
 
   constructor(
-    @Inject('Payment')
+    @Inject('PAYMENT_MODEL')
     private paymentModel: Model<IPayment>,
 
     private readonly kafkaClient: ClientKafka,
