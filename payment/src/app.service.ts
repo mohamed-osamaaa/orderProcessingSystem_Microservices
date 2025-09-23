@@ -18,6 +18,7 @@ export class AppService {
     @Inject('PAYMENT_MODEL')
     private paymentModel: Model<IPayment>,
 
+    @Inject('KAFKA_SERVICE')
     private readonly kafkaClient: ClientKafka,
   ) { }
 

@@ -6,6 +6,7 @@ services:
       - "${AUTH_PORT}:${AUTH_PORT}"
     volumes:
       - ./auth:/app
+    restart: always
 
   # Order Service
   order:
@@ -20,6 +21,7 @@ services:
       - KAFKA_BROKER=${KAFKA_BROKER}
     volumes:
       - ./order:/app
+    restart: always
 
   # Payment Service
   payment:
@@ -34,6 +36,7 @@ services:
       - KAFKA_BROKER=${KAFKA_BROKER}
     volumes:
       - ./payment:/app
+    restart: always
 
   # Notification Service
   notification:
@@ -46,6 +49,7 @@ services:
       - KAFKA_BROKER=${KAFKA_BROKER}
     volumes:
       - ./notification:/app
+    restart: always
 
   # Product Service
   product:
@@ -54,6 +58,7 @@ services:
       - "${PRODUCT_PORT}:${PRODUCT_PORT}"
     volumes:
       - ./product:/app
+    restart: always
 
   # RabbitMQ
   rabbitmq:
