@@ -4,6 +4,8 @@ services:
     build: ./auth
     ports:
       - "${AUTH_PORT}:${AUTH_PORT}"
+    volumes:
+      - ./auth:/app
 
   # Order Service
   order:
@@ -16,6 +18,8 @@ services:
     environment:
       - RABBITMQ_URL=${RABBITMQ_URL}
       - KAFKA_BROKER=${KAFKA_BROKER}
+    volumes:
+      - ./order:/app
 
   # Payment Service
   payment:
@@ -28,6 +32,8 @@ services:
     environment:
       - RABBITMQ_URL=${RABBITMQ_URL}
       - KAFKA_BROKER=${KAFKA_BROKER}
+    volumes:
+      - ./payment:/app
 
   # Notification Service
   notification:
@@ -38,12 +44,16 @@ services:
       - kafka
     environment:
       - KAFKA_BROKER=${KAFKA_BROKER}
+    volumes:
+      - ./notification:/app
 
   # Product Service
   product:
     build: ./product
     ports:
       - "${PRODUCT_PORT}:${PRODUCT_PORT}"
+    volumes:
+      - ./product:/app
 
   # RabbitMQ
   rabbitmq:
@@ -51,6 +61,8 @@ services:
     ports:
       - "${RABBITMQ_PORT}:${RABBITMQ_PORT}"
       - "${RABBITMQ_UI_PORT}:${RABBITMQ_UI_PORT}"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
 
   # Zookeeper
   zookeeper:
@@ -59,6 +71,8 @@ services:
       - "${ZOOKEEPER_PORT}:${ZOOKEEPER_PORT}"
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
+    volumes:
+      - zookeeper_data:/bitnami/zookeeper
 
   # Kafka
   kafka:
@@ -72,3 +86,10 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
       - zookeeper
+    volumes:
+      - kafka_data:/bitnami/kafka
+
+volumes:
+  rabbitmq_data:
+  zookeeper_data:
+  kafka_data:

@@ -13,9 +13,9 @@ import {
   Transport,
 } from '@nestjs/microservices';
 
-import { PaymentStatus } from '../../payment/src/enums/payment-status.enum';
 import { CreateOrderDto } from './dtos/create-order.dto';
 import { OrderStatus } from './enums/orderStatus.enum';
+import { PaymentStatus } from './enums/payment-status.enum';
 import { IOrder } from './interfaces/order.interface';
 
 @Injectable()
