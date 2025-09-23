@@ -1,5 +1,3 @@
-version: "${VERSION}"
-
 services:
   # Auth Service
   auth:
@@ -56,17 +54,21 @@ services:
 
   # Zookeeper
   zookeeper:
-    image: wurstmeister/zookeeper
+    image: bitnami/zookeeper:latest
     ports:
       - "${ZOOKEEPER_PORT}:${ZOOKEEPER_PORT}"
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
 
   # Kafka
   kafka:
-    image: wurstmeister/kafka
+    image: bitnami/kafka:latest
     ports:
       - "${KAFKA_PORT}:${KAFKA_PORT}"
     environment:
-      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
-      KAFKA_ZOOKEEPER_CONNECT: ${KAFKA_ZOOKEEPER_CONNECT}
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:${KAFKA_PORT}
+      - ALLOW_PLAINTEXT_LISTENER=yes
     depends_on:
       - zookeeper
