@@ -7,7 +7,7 @@ COPY package*.json ./
 # install dependencies
 RUN npm ci
 
-COPY . .
+# COPY . .
 
 # Port
 EXPOSE 4000

@@ -7,7 +7,7 @@ COPY package*.json ./
 # install dependencies
 RUN npm install
 
-COPY . .
+# COPY . .
 
 # Port
 EXPOSE 4003
