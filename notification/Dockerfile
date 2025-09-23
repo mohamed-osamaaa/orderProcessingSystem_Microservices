@@ -10,6 +10,6 @@ RUN npm install
 # COPY . .
 
 # Port
-EXPOSE 4003
+EXPOSE 6002
 
 CMD ["npm", "run", "start:dev"]
