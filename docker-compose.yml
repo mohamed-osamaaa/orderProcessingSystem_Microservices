@@ -1,100 +1,152 @@
+version: "3.9"
+
 services:
-  # Auth Service
-  auth:
-    build: ./auth
-    ports:
-      - "${AUTH_PORT}:${AUTH_PORT}"
-    volumes:
-      - ./auth:/app
-    # restart: always
-
-  # Order Service
-  order:
-    build: ./order
-    ports:
-      - "${ORDER_PORT}:${ORDER_PORT}"
-    depends_on:
-      - rabbitmq
-      - kafka
-    environment:
-      - RABBITMQ_URL=${RABBITMQ_URL}
-      - KAFKA_BROKER=${KAFKA_BROKER}
-    volumes:
-      - ./order:/app
-    # restart: always
-
-  # Payment Service
-  payment:
-    build: ./payment
-    ports:
-      - "${PAYMENT_PORT}:${PAYMENT_PORT}"
-    depends_on:
-      - rabbitmq
-      - kafka
-    environment:
-      - RABBITMQ_URL=${RABBITMQ_URL}
-      - KAFKA_BROKER=${KAFKA_BROKER}
-    volumes:
-      - ./payment:/app
-    # restart: always
-
-  # Notification Service
-  notification:
-    build: ./notification
-    ports:
-      - "${NOTIFICATION_PORT}:${NOTIFICATION_PORT}"
-    depends_on:
-      - kafka
-    environment:
-      - KAFKA_BROKER=${KAFKA_BROKER}
-    volumes:
-      - ./notification:/app
-    # restart: always
-
-  # Product Service
-  product:
-    build: ./product
-    ports:
-      - "${PRODUCT_PORT}:${PRODUCT_PORT}"
-    volumes:
-      - ./product:/app
-    # restart: always
-
-  # RabbitMQ
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
-      - "${RABBITMQ_PORT}:${RABBITMQ_PORT}"
-      - "${RABBITMQ_UI_PORT}:${RABBITMQ_UI_PORT}"
+      - "5672:5672"
+      - "15672:15672" # management UI
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - backend
 
-  # Zookeeper
   zookeeper:
-    image: bitnami/zookeeper:latest
-    ports:
-      - "${ZOOKEEPER_PORT}:${ZOOKEEPER_PORT}"
+    image: bitnami/zookeeper:3.9
+    container_name: zookeeper
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
+    ports:
+      - "2181:2181"
     volumes:
       - zookeeper_data:/bitnami/zookeeper
+    networks:
+      - backend
 
-  # Kafka
   kafka:
-    image: bitnami/kafka:latest
-    ports:
-      - "${KAFKA_PORT}:${KAFKA_PORT}"
-    environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:${KAFKA_PORT}
-      - ALLOW_PLAINTEXT_LISTENER=yes
+    image: bitnami/kafka:3.7
+    container_name: kafka
     depends_on:
       - zookeeper
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - ALLOW_PLAINTEXT_LISTENER=yes
+    ports:
+      - "9092:9092"
     volumes:
       - kafka_data:/bitnami/kafka
+    networks:
+      - backend
+
+  auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    container_name: auth
+    command: npm run start:dev
+    working_dir: /app
+    ports:
+      - "6000:6000"
+    env_file:
+      - ./auth/.env
+    environment:
+      - PORT=6000
+    volumes:
+      - ./auth:/app
+      - /app/node_modules
+    networks:
+      - backend
+
+  order:
+    build:
+      context: ./order
+    container_name: order
+    command: npm run start:dev
+    working_dir: /app
+    ports:
+      - "6001:6001"
+    env_file:
+      - ./order/.env
+    environment:
+      - PORT=6001
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+    volumes:
+      - ./order:/app
+      - /app/node_modules
+    depends_on:
+      - rabbitmq
+    networks:
+      - backend
+
+  notification:
+    build:
+      context: ./notification
+    container_name: notification
+    command: npm run start:dev
+    working_dir: /app
+    ports:
+      - "6002:6002"
+    env_file:
+      - ./notification/.env
+    environment:
+      - PORT=6002
+      - KAFKA_BROKER=kafka:9092
+    volumes:
+      - ./notification:/app
+      - /app/node_modules
+    depends_on:
+      - kafka
+    networks:
+      - backend
+
+  payment:
+    build:
+      context: ./payment
+    container_name: payment
+    command: npm run start:dev
+    working_dir: /app
+    ports:
+      - "6003:6003"
+    env_file:
+      - ./payment/.env
+    environment:
+      - PORT=6003
+      - RABBITMQ_URL=amqp://rabbitmq:5672
+      - KAFKA_BROKER=kafka:9092
+    volumes:
+      - ./payment:/app
+      - /app/node_modules
+    depends_on:
+      - rabbitmq
+      - kafka
+    networks:
+      - backend
+
+  product:
+    build:
+      context: ./product
+    container_name: product
+    command: npm run start:dev
+    working_dir: /app
+    ports:
+      - "6004:6004"
+    env_file:
+      - ./product/.env
+    environment:
+      - PORT=6004
+    volumes:
+      - ./product:/app
+      - /app/node_modules
+    networks:
+      - backend
+
+networks:
+  backend: {}
 
 volumes:
-  rabbitmq_data:
-  zookeeper_data:
-  kafka_data:
+  rabbitmq_data: {}
+  zookeeper_data: {}
+  kafka_data: {}
