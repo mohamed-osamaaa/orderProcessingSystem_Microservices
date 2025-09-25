@@ -6,9 +6,15 @@ import {
   EventPattern,
   Payload,
 } from '@nestjs/microservices';
+import {
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { AppService } from './app.service';
+import { CreateNotificationDto } from './dtos/create-notification.dto';
 
+@ApiTags('Notifications')
 @Controller()
 export class AppController {
   constructor(private readonly notificationService: AppService) { }
@@ -34,6 +40,11 @@ export class AppController {
   }
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'List of all notifications',
+    type: [CreateNotificationDto],
+  })
   async findAllNotifications() {
     return this.notificationService.getNotifications();
   }

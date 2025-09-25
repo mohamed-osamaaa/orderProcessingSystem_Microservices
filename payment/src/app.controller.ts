@@ -6,10 +6,15 @@ import {
   EventPattern,
   Payload,
 } from '@nestjs/microservices';
+import {
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { AppService } from './app.service';
 import { CreatePaymentDto } from './dtos/create-payment.dto';
 
+@ApiTags('Payments')
 @Controller()
 export class AppController {
   constructor(private readonly paymentService: AppService) { }
@@ -20,6 +25,11 @@ export class AppController {
   }
 
   @Get()
+  @ApiResponse({
+    status: 200,
+    description: 'List of all payments',
+    type: [CreatePaymentDto],
+  })
   async findAllPayments() {
     return this.paymentService.getPayments();
   }

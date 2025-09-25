@@ -49,11 +49,11 @@ services:
     command: npm run start:dev
     working_dir: /app
     ports:
-      - "6000:6000"
+      - "6005:6005"
     env_file:
       - ./auth/.env
     environment:
-      - PORT=6000
+      - PORT=6005
     volumes:
       - ./auth:/app
       - /app/node_modules
