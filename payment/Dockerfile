@@ -10,6 +10,6 @@ RUN npm ci
 # COPY . .
 
 # Port
-EXPOSE 6003
+EXPOSE 7003
 
 CMD ["npm", "run", "start:dev"]

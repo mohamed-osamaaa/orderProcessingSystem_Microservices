@@ -28,7 +28,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Payment Service')
-    .setDescription('Authentication API documentation')
+    .setDescription('Payment API documentation')
     .setVersion('1.0.0')
     .addBearerAuth()
     .build();

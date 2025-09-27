@@ -31,13 +31,12 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Notification Service')
-    .setDescription('Authentication API documentation')
+    .setDescription('Notification API documentation')
     .setVersion('1.0.0')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(restApp, config);
   SwaggerModule.setup('docs', restApp, document);
-
 
   await restApp.listen(Number(process.env.PORT || 7002), '0.0.0.0');
 }

@@ -29,7 +29,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Order Service')
-    .setDescription('Authentication API documentation')
+    .setDescription('Order API documentation')
     .setVersion('1.0.0')
     .addBearerAuth()
     .build();
