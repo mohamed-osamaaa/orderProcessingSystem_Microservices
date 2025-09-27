@@ -20,8 +20,7 @@ export class AppController {
   constructor(private readonly notificationService: AppService) { }
 
   @EventPattern('payment_success')
-  async handlePaymentSuccess(@Payload() message: any) {
-    const data = message.value;
+  async handlePaymentSuccess(@Payload() data: any) {
     await this.notificationService.createNotification({
       userId: data.userId,
       title: 'Payment Successful',
@@ -30,8 +29,7 @@ export class AppController {
   }
 
   @EventPattern('payment_failed')
-  async handlePaymentFailed(@Payload() message: any) {
-    const data = message.value;
+  async handlePaymentFailed(@Payload() data: any) {
     await this.notificationService.createNotification({
       userId: data.userId,
       title: 'Payment Failed',
