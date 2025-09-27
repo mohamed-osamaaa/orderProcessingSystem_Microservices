@@ -4,6 +4,8 @@ import {
   Inject,
   Injectable,
   InternalServerErrorException,
+  OnModuleDestroy,
+  OnModuleInit,
 } from '@nestjs/common';
 import { ClientKafka } from '@nestjs/microservices';
 
@@ -12,7 +14,7 @@ import { PaymentStatus } from './enums/payment-status.enum';
 import { IPayment } from './interfaces/payment.interface';
 
 @Injectable()
-export class AppService {
+export class AppService implements OnModuleInit, OnModuleDestroy {
 
   constructor(
     @Inject('PAYMENT_MODEL')
@@ -21,6 +23,15 @@ export class AppService {
     @Inject('KAFKA_SERVICE')
     private readonly kafkaClient: ClientKafka,
   ) { }
+
+  async onModuleInit() {
+    // Ensure Kafka producer is connected before emitting events
+    await this.kafkaClient.connect();
+  }
+
+  async onModuleDestroy() {
+    await this.kafkaClient.close();
+  }
 
   async processPayment(dto: CreatePaymentDto) {
     try {
@@ -38,13 +49,10 @@ export class AppService {
       this.kafkaClient.emit(
         success ? 'payment_success' : 'payment_failed',
         {
-          key: dto.userId,
-          value: {
-            userId: dto.userId,
-            orderId: dto.orderId,
-            amount: dto.amount,
-            status: payment.status,
-          }
+          userId: dto.userId,
+          orderId: dto.orderId,
+          amount: dto.amount,
+          status: payment.status,
         },
       );
 

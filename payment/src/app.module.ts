@@ -23,11 +23,12 @@ import { paymentProviders } from './providers/payment.providers';
             clientId: 'payment-service',
             brokers: [String(process.env.KAFKA_BROKER)],
           },
-          consumer: {
-            groupId: 'payment-consumer',
-            numPartitions: 3,
-            replicationFactor: 1,
-          },
+          // consumer: {
+          //   groupId: 'payment-consumer',
+          //   numPartitions: 3,
+          //   replicationFactor: 1,
+          // },
+          producerOnlyMode: true,
         },
       },
     ]),
