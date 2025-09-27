@@ -49,11 +49,11 @@ services:
     command: npm run start:dev
     working_dir: /app
     ports:
-      - "6005:6005"
+      - "7000:7000"
     env_file:
       - ./auth/.env
     environment:
-      - PORT=6005
+      - PORT=7000
     volumes:
       - ./auth:/app
       - /app/node_modules
@@ -67,11 +67,11 @@ services:
     command: npm run start:dev
     working_dir: /app
     ports:
-      - "6001:6001"
+      - "7001:7001"
     env_file:
       - ./order/.env
     environment:
-      - PORT=6001
+      - PORT=7001
       - RABBITMQ_URL=amqp://rabbitmq:5672
     volumes:
       - ./order:/app
@@ -88,11 +88,11 @@ services:
     command: npm run start:dev
     working_dir: /app
     ports:
-      - "6002:6002"
+      - "7002:7002"
     env_file:
       - ./notification/.env
     environment:
-      - PORT=6002
+      - PORT=7002
       - KAFKA_BROKER=kafka:9092
     volumes:
       - ./notification:/app
@@ -109,11 +109,11 @@ services:
     command: npm run start:dev
     working_dir: /app
     ports:
-      - "6003:6003"
+      - "7003:7003"
     env_file:
       - ./payment/.env
     environment:
-      - PORT=6003
+      - PORT=7003
       - RABBITMQ_URL=amqp://rabbitmq:5672
       - KAFKA_BROKER=kafka:9092
     volumes:
@@ -132,11 +132,11 @@ services:
     command: npm run start:dev
     working_dir: /app
     ports:
-      - "6004:6004"
+      - "7004:7004"
     env_file:
       - ./product/.env
     environment:
-      - PORT=6004
+      - PORT=7004
     volumes:
       - ./product:/app
       - /app/node_modules

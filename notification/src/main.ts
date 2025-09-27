@@ -39,7 +39,7 @@ async function bootstrap() {
   SwaggerModule.setup('docs', restApp, document);
 
 
-  await restApp.listen(Number(process.env.PORT));
+  await restApp.listen(Number(process.env.PORT || 7002), '0.0.0.0');
 }
 
 bootstrap();

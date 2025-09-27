@@ -46,6 +46,7 @@ export class AppController {
   async findOne(@Param('id') id: string) {
     return this.ordersService.findOne(id);
   }
+
   @MessagePattern('payment_success')
   async handlePaymentSuccess(@Payload() data: { orderId: string }) {
     await this.ordersService.updateOrderStatus(data.orderId, OrderStatus.PAID);

@@ -17,7 +17,7 @@ async function bootstrap() {
     transport: Transport.RMQ,
     options: {
       urls: [String(process.env.RABBITMQ_URL)],
-      queue: 'payment_queue',
+      queue: 'order_queue',
       queueOptions: { durable: true },
     },
   });
@@ -36,6 +36,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(Number(process.env.PORT));
+  await app.listen(Number(process.env.PORT || 7001), '0.0.0.0');
 }
 bootstrap();

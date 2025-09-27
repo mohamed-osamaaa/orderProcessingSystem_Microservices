@@ -3,7 +3,7 @@ import {
   Get,
 } from '@nestjs/common';
 import {
-  EventPattern,
+  MessagePattern,
   Payload,
 } from '@nestjs/microservices';
 import {
@@ -19,7 +19,7 @@ import { CreatePaymentDto } from './dtos/create-payment.dto';
 export class AppController {
   constructor(private readonly paymentService: AppService) { }
 
-  @EventPattern('process_payment')
+  @MessagePattern('process_payment')
   async handlePayment(@Payload() data: CreatePaymentDto) {
     return this.paymentService.processPayment(data);
   }
