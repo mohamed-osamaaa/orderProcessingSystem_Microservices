@@ -3,6 +3,7 @@
 A **scalable microservices architecture** built with **NestJS**. This project highlights:
 
 * **Service-to-service communication** using **RabbitMQ (RPC)** and **Kafka (event streaming)**
+* **MongoDB (via Mongoose & Atlas)** for persistence — each service has its **own database**
 * **Swagger** for fully documented REST APIs
 * **Docker & Docker Compose** for containerized deployment
 * Clean modular design separating concerns across different services
@@ -13,11 +14,11 @@ This repository is a showcase of microservices skills, infrastructure setup, and
 
 ## 🏗️ Architecture Overview
 
-* **Auth Service** → Manages authentication & users
-* **Product Service** → Handles product catalog & inventory
-* **Order Service** → Places/tracks orders, communicates with Payment via RabbitMQ
-* **Payment Service** → Processes payments, emits Kafka events
-* **Notification Service** → Listens to Kafka events and generates notifications
+* **Auth Service** → Manages authentication & users (MongoDB: `auth-db`)
+* **Product Service** → Handles product catalog & inventory (MongoDB: `product-db`)
+* **Order Service** → Places/tracks orders, communicates with Payment via RabbitMQ (MongoDB: `order-db`)
+* **Payment Service** → Processes payments, emits Kafka events (MongoDB: `payment-db`)
+* **Notification Service** → Listens to Kafka events and generates notifications (MongoDB: `notification-db`)
 
 **Message Brokers:**
 
@@ -34,6 +35,12 @@ flowchart LR
 
   Order <-- RabbitMQ RPC --> Payment
   Payment -- Kafka Events --> Notification
+
+  Auth -->|MongoDB: auth-db| DB1[(Auth_DB)]
+  Product -->|MongoDB: product-db| DB2[(Product_DB)]
+  Order -->|MongoDB: order-db| DB3[(Order_DB)]
+  Payment -->|MongoDB: payment-db| DB4[(Payment_DB)]
+  Notification -->|MongoDB: notification-db| DB5[(Notification_DB)]
 ```
 
 ---
@@ -104,9 +111,32 @@ docker compose up -d rabbitmq zookeeper kafka
 
 ## 🌍 Environment Variables
 
-Each service uses a `.env` file. Common variables include:
+Each service uses its own `.env` file with a **dedicated MongoDB Atlas database**:
 
-* `PORT=700x`
+```env
+# Auth Service .env
+PORT=7000
+MONGO_URL=mongodb+srv://.../auth-db
+
+# Product Service .env
+PORT=7004
+MONGO_URL=mongodb+srv://.../product-db
+
+# Order Service .env
+PORT=7001
+MONGO_URL=mongodb+srv://.../order-db
+
+# Payment Service .env
+PORT=7003
+MONGO_URL=mongodb+srv://.../payment-db
+
+# Notification Service .env
+PORT=7002
+MONGO_URL=mongodb+srv://.../notification-db
+```
+
+Other common variables:
+
 * `RABBITMQ_URL=amqp://rabbitmq:5672`
 * `KAFKA_BROKER=kafka:9092`
 
@@ -124,6 +154,7 @@ Each service uses a `.env` file. Common variables include:
 ## 🛠️ Tech Highlights
 
 * **NestJS Microservices** for modular service design
+* **MongoDB Atlas + Mongoose** for persistence (DB per service)
 * **RabbitMQ & Kafka** for hybrid messaging
 * **Swagger** for API documentation
 * **Docker & Docker Compose** for containerized orchestration
@@ -135,6 +166,7 @@ Each service uses a `.env` file. Common variables include:
 * Demonstrates **Dockerized Microservices** with NestJS
 * Showcases **Swagger-driven API design**
 * Implements **RabbitMQ RPC** & **Kafka event streaming**
+* Uses **MongoDB Atlas per service** for proper data separation
 * Production-style setup with **Docker Compose orchestration**
 
 ---
